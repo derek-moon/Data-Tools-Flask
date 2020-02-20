@@ -12,13 +12,6 @@ import requests
 
 from app.blueprints.webscrape import selenium
 
-@webscrape.route('/setCronjob',methods=['POST'])
-def setCronjob():
-    selenium.execute()
-    flash("Cronjob is set")
-    return redirect(url_for('webscrape.webscraper'))
-
-
 @webscrape.route('/', methods=['GET','POST'])
 def webscraper():
     dataForm = DataForm()
@@ -33,7 +26,6 @@ def webscraper():
     )
    
     return render_template('webscraper.html', **context)
-#38
 
 @webscrape.route('/nbaData', methods=['POST'])
 def nbaData():
@@ -48,3 +40,14 @@ def nbaData():
         flash("Retrieved Data Successfully","success")
         return redirect(url_for('webscrape.webscraper'))
 
+@webscrape.route('/setCronjob',methods=['POST'])
+def setCronjob():
+    selenium.execute()
+    flash("Cronjob is set")
+    return redirect(url_for('webscrape.webscraper'))
+
+@webscrape.route('/clearSession', methods=['POST'])
+def clearSession():
+    session.clear()
+    flash("Session has been cleared","info")
+    return redirect(url_for('webscrape.webscraper'))
