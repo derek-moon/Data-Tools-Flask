@@ -1,7 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 
-class DataForm(FlaskForm):
+class DataPlayerForm(FlaskForm):
+    search = StringField()
+    submit = SubmitField('Scrape Data')
+
+class DataTeamForm(FlaskForm):
     search = StringField()
     submit = SubmitField('Scrape Data')
 

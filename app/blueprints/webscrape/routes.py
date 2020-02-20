@@ -2,9 +2,10 @@ from app import  db
 from flask import current_app, render_template, redirect, url_for, flash, session
 from app.models import User
 from flask_login import login_user, logout_user, login_required, current_user
-from app.blueprints.webscrape.forms import DataForm, SessionForm, CSVForm, CronjobForm
+from app.blueprints.webscrape.forms import DataPlayerForm, DataTeamForm, SessionForm, CSVForm, CronjobForm
+
 from app.blueprints.webscrape import webscrape
-from app.blueprints.webscrape.getData import getData, cleanData
+from app.blueprints.webscrape.getData import  cleanPlayerData, cleanTeamData
 
 from bs4 import BeautifulSoup
 import requests
@@ -14,30 +15,31 @@ from app.blueprints.webscrape import selenium
 
 @webscrape.route('/', methods=['GET','POST'])
 def webscraper():
-    dataForm = DataForm()
+    dataPlayerForm = DataPlayerForm()
+    dataTeamForm = DataTeamForm()
     sessionForm = SessionForm()
     csvForm = CSVForm()
     cronjobForm = CronjobForm()
     data = session.get('data')
-    context = dict(data=data, dataForm=dataForm, sessionForm=sessionForm, csvForm=csvForm, cronjobForm=cronjobForm)
+    context = dict(data=data, dataPlayerForm=dataPlayerForm, dataTeamForm=dataTeamForm, sessionForm=sessionForm, csvForm=csvForm, cronjobForm=cronjobForm)
 
-    context = dict(
-       data=data, dataForm=dataForm, sessionForm=sessionForm, csvForm=csvForm, cronjobForm=cronjobForm
-    )
-   
     return render_template('webscraper.html', **context)
 
-@webscrape.route('/nbaData', methods=['POST'])
-def nbaData():
-    dataForm = DataForm()
-    if dataForm.validate_on_submit():
-        page = requests.get('https://www.nbastuffer.com/2019-2020-nba-player-stats/')
-        soup = BeautifulSoup(page.content, 'html.parser')
-        html = [i for i in list(soup.children)][3] 
-        tr_list = html.find_all('tr')[1:]
-        session['data'] = cleanData(tr_list, dataForm.search.data)
-        print(session.get('data'))
-        flash("Retrieved Data Successfully","success")
+@webscrape.route('/nbaPlayerData', methods=['POST'])
+def nbaPlayerData():
+    dataPlayerForm = DataPlayerForm()
+    if dataPlayerForm.validate_on_submit():
+        session['data'] = cleanPlayerData(dataHelper(), dataPlayerForm.search.data)
+        flash("Retrieved Data Player Successfully","success")
+        return redirect(url_for('webscrape.webscraper'))
+
+
+@webscrape.route('/nbaTeamData', methods=['POST'])
+def nbaTeamData():
+    dataTeamForm = DataTeamForm()
+    if dataTeamForm.validate_on_submit():
+        session['data'] = cleanTeamData(dataHelper(), dataTeamForm.search.data)
+        flash("Retrieved Team Data Successfully","success")
         return redirect(url_for('webscrape.webscraper'))
 
 @webscrape.route('/setCronjob',methods=['POST'])
@@ -51,3 +53,10 @@ def clearSession():
     session.clear()
     flash("Session has been cleared","info")
     return redirect(url_for('webscrape.webscraper'))
+
+def dataHelper():
+    page = requests.get('https://www.nbastuffer.com/2019-2020-nba-player-stats/')
+    soup = BeautifulSoup(page.content, 'html.parser')
+    html = [i for i in list(soup.children)][3] 
+    tr_list = html.find_all('tr')[1:]
+    return tr_list

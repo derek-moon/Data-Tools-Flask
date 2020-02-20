@@ -3,35 +3,65 @@
 {% block content %}
 <div id="content">
   <div class="row">
-    <div class="col-lg offset-md-1">
-      <h3>Webscrape Page</h3>
-      <h6>Type in a player's first and last name. Seperate players with commas to add multiple</h6>
-      <hr/>
-    
-      <form class="form-inline" action="{{url_for('webscrape.nbaData')}}", method="POST" >
-        {{ dataForm.hidden_tag() }}
-        <div class="form-group">
-          {{ dataForm.search(class="form-control", placeholder="Lebron James, Jimmy Butler...")}} 
-        </div>
-        <div class="form-group">
-            {{ dataForm.submit(class="btn btn-info") }}
-        </div>
-      </form>
-
-      <form class="form-inline" action="{{url_for('webscrape.clearSession')}}", method="POST" >
-        {{ sessionForm.hidden_tag() }}
+    <div class="col-lg">
+      <div>
         
-        <div class="form-group">
-            {{ sessionForm.submit(class="btn btn-warning") }}
-        </div>
-      </form>
-
-      <form class="form-inline" action="{{ url_for('webscrape.setCronjob') }}", method="POST">
+    
+      <form class="form-inline float-right" action="{{ url_for('webscrape.setCronjob') }}", method="POST">
         {{ cronjobForm.hidden_tag() }}
         <div class="form-group">
           {{ cronjobForm.submit(class="btn btn-success") }}
         </div>
       </form>
+      <form class="form-group float-right" action="{{url_for('webscrape.clearSession')}}", method="POST" >
+        {{ sessionForm.hidden_tag() }}
+        <div class="form-group float-right">
+            {{ sessionForm.submit(class="btn btn-warning") }}
+        </div>
+      </form>
+        <h3>Webscrape Page</h3>
+    
+      </div>
+
+      <hr/>
+      <div  >
+        <h6>Search by Player Name</h6>
+        <small>Type in a player's first and last name. Seperate players with commas to add multiple</small>
+        <form class="form-inline " action="{{url_for('webscrape.nbaPlayerData')}}", method="POST" >
+          {{ dataPlayerForm.hidden_tag() }}
+          
+          <div class="form-group col-xs-4" >
+            {{ dataPlayerForm.search(class="form-control", placeholder="Lebron James, Jimmy Butler...")}} 
+          </div>
+          <div class="form-group">
+            {{ dataPlayerForm.submit(class="btn btn-info") }}
+        </div>
+        </form>
+      </div>
+      <hr/>
+
+      <div  >
+        <h6>Search by Team Name</h6>
+        <small>Type in an NBA team. Seperate players with commas to add multiple</small>
+        <form class="form-inline " action="{{url_for('webscrape.nbaTeamData')}}", method="POST" >
+          {{ dataTeamForm.hidden_tag() }}
+          
+          <div class="form-group col-xs-4" >
+            {{ dataTeamForm.search(class="form-control", placeholder="LAC, CHI, ")}} 
+          </div>
+
+          <div class="form-group">
+            {{ dataTeamForm.submit(class="btn btn-info") }}
+        </div>
+        </form>
+      </div>
+
+      <hr/>
+      <div>
+        
+      </div>  
+
+      
     
      
         <table class="table table-fixed table-striped">
