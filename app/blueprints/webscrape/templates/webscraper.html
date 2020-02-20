@@ -3,7 +3,7 @@
 {% block content %}
 <div id="content">
   <div class="row">
-    <div class="col-md-10 offset-md-1">
+    <div class="col-lg offset-md-1">
       <h3>Webscrape Page</h3>
 
       <hr/>
@@ -11,7 +11,7 @@
       <form class="form-inline" action="{{url_for('webscrape.nbaData')}}", method="POST" >
         {{ dataForm.hidden_tag() }}
         <div class="form-group">
-          {#{{ dataForm.search(class="form-control", placeholder="Lebron James, Jimmy Butler...")}} #}
+          {{ dataForm.search(class="form-control", placeholder="Lebron James, Jimmy Butler...")}} 
         </div>
         <div class="form-group">
             {{ dataForm.submit(class="btn btn-info") }}
@@ -25,31 +25,41 @@
         </div>
       </form>
     
-      <table class="table table-striped table-inverse table-responsive">
-        <thead class="thead-inverse">
+      {% if data %}
+        <table class="table table-fixed table-striped">
+          <thead class="thead-inverse">
             <tr>
-                <th>Full Name</th>
-                <th>Team</th>
-                
-                <th>POS</th>
-                <th>Age</th>
-                <th>GP</th>
-                <th>MPG</th>
-                <th>FTA</th>
-                <th>FT %</th>
-                <th>2PA</th>
-                <th>2P%</th> 
-                <th>3PA</th>
-                <th>3P%</th> 
-                <th>PPG</th>
-                <th>RPG</th>
-                <th>APG</th>
-                <th>SPG</th>
-                <th>BPC</th>
-                <th>TOPG</th>
-    
+              <th>NAME</th>
+              <th>TEAM</th>
+              <th>POS</th>
+              <th>AGE</th>
+              <th>GP</th>
+              <th>MPG</th>
+              <th>FTA</th>
+              <th>FT%</th>
+              <th>2PA</th>
+              <th>2P%</th>
+              <th>3PA</th>
+              <th>3P%</th>
+              <th>PPG</th>
+              <th>RPG</th>
+              <th>APG</th>
+              <th>SPG</th>
+              <th>BPG</th>
+              <th>TOPG</th>
             </tr>
-            </thead>
+          </thead>
+          <tbody>
+            {% for row in data %}
+              <tr>
+                {% for i in row %}
+                  <td>{{ i }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
     
     </div>
 

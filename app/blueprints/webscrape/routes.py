@@ -3,7 +3,8 @@ from flask import current_app, render_template, redirect, url_for, flash, sessio
 from app.models import User
 from flask_login import login_user, logout_user, login_required, current_user
 from app.blueprints.webscrape.forms import DataForm, SessionForm, CSVForm, CronjobForm
-from app.blueprints.webscrape import webscrape, getData
+from app.blueprints.webscrape import webscrape
+from app.blueprints.webscrape.getData import getData, cleanData
 
 from bs4 import BeautifulSoup
 import requests
@@ -24,8 +25,11 @@ def webscraper():
     sessionForm = SessionForm()
     csvForm = CSVForm()
     cronjobForm = CronjobForm()
+    data = session.get('data')
+    context = dict(data=data, dataForm=dataForm, sessionForm=sessionForm, csvForm=csvForm, cronjobForm=cronjobForm)
+
     context = dict(
-        data=[[1,2,3]], dataForm=dataForm, sessionForm=sessionForm, csvForm=csvForm, cronjobForm=cronjobForm
+       data=data, dataForm=dataForm, sessionForm=sessionForm, csvForm=csvForm, cronjobForm=cronjobForm
     )
    
     return render_template('webscraper.html', **context)
@@ -39,7 +43,8 @@ def nbaData():
         soup = BeautifulSoup(page.content, 'html.parser')
         html = [i for i in list(soup.children)][3] 
         tr_list = html.find_all('tr')[1:]
-        session['data'] = getData(tr_list)
+        session['data'] = cleanData(tr_list, dataForm.search.data)
+        print(session.get('data'))
         flash("Retrieved Data Successfully","success")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('webscrape.webscraper'))
 
