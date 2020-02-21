@@ -1,6 +1,6 @@
 import requests, csv, os
 from app import  db
-from flask import current_app, render_template, redirect, url_for, flash, session
+from flask import current_app, render_template, redirect, url_for, flash, session, jsonify
 from app.models import User
 from flask_login import login_user, logout_user, login_required, current_user
 from app.blueprints.webscrape.forms import CSVForm, DataPlayerForm, DataTeamForm, SessionForm, CSVForm, CronjobForm
@@ -48,6 +48,7 @@ def toCSV():
   column_list = ["NAME", "TEAM", "POS", "AGE", "GP", "MPG", "FTA", "FT%", "2PA", "2P%", "3PA", "3P%", "PPG", "RPG", "APG", "SPG", "BPG", "TOPG"]
   csv_list = []
   csv_list.append(column_list)
+
   for i in session.get('data'):
     csv_list.append(i)
   with open(os.path.join(os.path.dirname(__name__), 'data.csv'), 'w', newline='') as f:
@@ -55,9 +56,6 @@ def toCSV():
     writer.writerows(csv_list)
   flash("Information saved to CSV", "success")
   return redirect(url_for('webscrape.webscraper'))
-
-
-
 
 
 @webscrape.route('/setCronjob',methods=['POST'])

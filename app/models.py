@@ -39,6 +39,7 @@ class Record(db.Model):
     ppg = db.Column(db.Float, nullable=False)
     rpg = db.Column(db.Float, nullable=False)
     apg = db.Column(db.Float, nullable=False)
+    spg = db.Column(db.Float, nullable=False)
     bpg = db.Column(db.Float, nullable=False)
     topg = db.Column(db.String, nullable=False)
 
