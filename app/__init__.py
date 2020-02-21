@@ -36,6 +36,9 @@ def create_app(config_class=Config):
     from app.blueprints.webscrape import webscrape
     app.register_blueprint(webscrape, url_prefix='/webscrape')
 
+    from app.blueprints.players import players
+    app.register_blueprint(players, url_prefix='/players')
+
     from flask_moment import Moment
     moment = Moment(app)
     

@@ -97,3 +97,5 @@ def dataHelper():
     html = [i for i in list(soup.children)][3] 
     tr_list = html.find_all('tr')[1:]
     return tr_list
+
+ 

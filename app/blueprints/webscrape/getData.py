@@ -1,5 +1,7 @@
 def getTeamData(data):
     data_list = []
+    #data = tr list 
+    print(type(data))
     for tr in data:
         data_values = []
         for dIndex, dValue in enumerate(tr):

@@ -16,10 +16,10 @@
       <form class="form-group float-right" action="{{url_for('webscrape.clearSession')}}", method="POST" >
         {{ sessionForm.hidden_tag() }}
         <div class="form-group float-right">
-            {{ sessionForm.submitSession(class="btn btn-warning") }}
+            {{ sessionForm.submitSession(class="btn btn-danger") }}
         </div>
       </form>
-      <form class="form-inline" action="{{ url_for('webscrape.toCSV') }}", method="POST">
+      <form class="form-group float-right" action="{{ url_for('webscrape.toCSV') }}", method="POST">
         {{ csvForm.hidden_tag() }}
         <div class="form-group">
           {{ csvForm.submitCSV(class="btn btn-warning") }}
