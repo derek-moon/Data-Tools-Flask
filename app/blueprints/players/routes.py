@@ -1,4 +1,4 @@
-import requests, csv, os
+import requests, csv, os, base64, io
 from app import  db
 from flask import current_app, render_template, redirect, url_for, flash, session, jsonify
 from app.models import PlayerRecord
@@ -10,27 +10,65 @@ from app.blueprints.players.getData import cleanPlayerData
 from bs4 import BeautifulSoup
 from _datetime import datetime
 
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 @players.route('/')
 def player():
+    data = PlayerRecord.query.filter(PlayerRecord.mpg > 20)
+    ppg_list = []
+    for row in data:
+        ppg_list.append(row.ppg)
+
+    print(f"Mean: {np.mean(ppg_list)}")
+    plt.hist(ppg_list)
+    #print(float(data[5].ppg))
+
+
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    axis.set_title("title")
+    axis.set_xlabel("x-axis")
+    axis.set_ylabel("y-axis")
+    axis.grid()
+    axis.plot(range(5), range(5), "ro-")
+
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+
+    pngImageB64String = "data:image/png;base64,"
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+    image = pngImageB64String
     context = {
-
+        'graph':image
     }
-
     pass
     return render_template('players.html', **context)
+
+
+def create_figure():
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    xs = range(100)
+    ys = [random.randint(1, 50) for x in xs]
+    axis.plot(xs, ys)
+    return fig
+
+
 
 
 #uploads updated player data to server
 @players.route('/upload')
 def upload():
     session['data'] = cleanPlayerData(dataHelper())
-    flash("Retrieved Team Data Successfully","success")
+    flash("Retrieved and Updated Database Successfully","success")
     data = session.get('data')
 
     column_list = ["NAME", "TEAM", "POS", "AGE", "GP", "MPG", "FTA", "FT%", "2PA", "2P%", "3PA", "3P%", "PPG", "RPG", "APG", "SPG", "BPG", "TOPG"]
     db_list = []
     db_list.append(column_list)
-
 
     for inner_list in session.get('data'):
         db_list.append(inner_list)
@@ -59,8 +97,6 @@ def upload():
 
     context = dict(data=data)
     return render_template('players.html', **context)
-
-
 
 def dataHelper():
     page = requests.get('https://www.nbastuffer.com/2019-2020-nba-player-stats/')

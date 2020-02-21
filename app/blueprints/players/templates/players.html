@@ -5,54 +5,16 @@
   <div class="row">
     <div class="col-lg">
       <div>
-      
         <h3>Player Stats Page</h3>
-    
       </div>
-
       <hr/>
     
-
-        <table class="table table-fixed table-striped">
-          <thead class="thead-inverse">
-            <tr>
-              <th>NAME</th>
-              <th>TEAM</th>
-              <th>POS</th>
-              <th>AGE</th>
-              <th>GP</th>
-              <th>MPG</th>
-              <th>FTA</th>
-              <th>FT%</th>
-              <th>2PA</th>
-              <th>2P%</th>
-              <th>3PA</th>
-              <th>3P%</th>
-              <th>PPG</th>
-              <th>RPG</th>
-              <th>APG</th>
-              <th>SPG</th>
-              <th>BPG</th>
-              <th>TOPG</th>
-            </tr>
-          </thead>
-          {% if data %}
-          <tbody>
-            {% for row in data %}
-              <tr>
-                {% for i in row %}
-                  <td>{{ i }}</td>
-                {% endfor %}
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% endif %}
+      <img src="{{ graph }}"/>
+       
     
+
     </div>
-
   </div>
-
 </div>
  
 {% endblock %}
