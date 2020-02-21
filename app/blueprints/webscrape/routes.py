@@ -1,14 +1,15 @@
+import requests, csv, os
 from app import  db
 from flask import current_app, render_template, redirect, url_for, flash, session
 from app.models import User
 from flask_login import login_user, logout_user, login_required, current_user
-from app.blueprints.webscrape.forms import DataPlayerForm, DataTeamForm, SessionForm, CSVForm, CronjobForm
+from app.blueprints.webscrape.forms import CSVForm, DataPlayerForm, DataTeamForm, SessionForm, CSVForm, CronjobForm
 
 from app.blueprints.webscrape import webscrape
 from app.blueprints.webscrape.getData import  cleanPlayerData, cleanTeamData
 
 from bs4 import BeautifulSoup
-import requests
+
 
 
 from app.blueprints.webscrape import selenium
@@ -41,6 +42,23 @@ def nbaTeamData():
         session['data'] = cleanTeamData(dataHelper(), dataTeamForm.search.data)
         flash("Retrieved Team Data Successfully","success")
         return redirect(url_for('webscrape.webscraper'))
+
+@webscrape.route('/toCSV', methods=['POST'])
+def toCSV():
+  column_list = ["NAME", "TEAM", "POS", "AGE", "GP", "MPG", "FTA", "FT%", "2PA", "2P%", "3PA", "3P%", "PPG", "RPG", "APG", "SPG", "BPG", "TOPG"]
+  csv_list = []
+  csv_list.append(column_list)
+  for i in session.get('data'):
+    csv_list.append(i)
+  with open(os.path.join(os.path.dirname(__name__), 'data.csv'), 'w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerows(csv_list)
+  flash("Information saved to CSV", "success")
+  return redirect(url_for('webscrape.webscraper'))
+
+
+
+
 
 @webscrape.route('/setCronjob',methods=['POST'])
 def setCronjob():

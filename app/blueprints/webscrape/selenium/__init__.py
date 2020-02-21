@@ -8,8 +8,6 @@ def repeatableAction(browserObj):
     browserObj.find_element_by_id("search").send_keys("hello")
     action = ActionChains(browserObj)
     
-
-
 def execute():
     chrome_options = webdriver.ChromeOptions()
     browser = webdriver.Chrome(executable_path=os.path.join(os.path.dirname(__file__),'chromedriver'),chrome_options=chrome_options)

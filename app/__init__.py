@@ -22,9 +22,6 @@ basedir = os.path.dirname(os.path.abspath(__file__))
 def create_app(config_class=Config):
     app = Flask(__name__)
     
-   
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.path.join(basedir,'app.db')
-
     app.config.from_object(config_class)
 
     db.init_app(app)

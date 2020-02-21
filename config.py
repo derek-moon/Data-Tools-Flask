@@ -8,7 +8,7 @@ basedir = os.path.dirname(os.path.abspath(__file__))
 
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(basedir,'app.db')}"
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
