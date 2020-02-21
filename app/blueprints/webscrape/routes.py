@@ -1,18 +1,16 @@
 import requests, csv, os
 from app import  db
 from flask import current_app, render_template, redirect, url_for, flash, session, jsonify
-from app.models import User
+from app.models import User, Record
 from flask_login import login_user, logout_user, login_required, current_user
 from app.blueprints.webscrape.forms import CSVForm, DataPlayerForm, DataTeamForm, SessionForm, CSVForm, CronjobForm
 
-from app.blueprints.webscrape import webscrape
+from app.blueprints.webscrape import webscrape, selenium
 from app.blueprints.webscrape.getData import  cleanPlayerData, cleanTeamData
 
 from bs4 import BeautifulSoup
+from _datetime import datetime
 
-
-
-from app.blueprints.webscrape import selenium
 
 @webscrape.route('/', methods=['GET','POST'])
 def webscraper():
@@ -49,9 +47,32 @@ def toCSV():
   csv_list = []
   csv_list.append(column_list)
 
-  for i in session.get('data'):
-    csv_list.append(i)
-  with open(os.path.join(os.path.dirname(__name__), 'data.csv'), 'w', newline='') as f:
+  for inner_list in session.get('data'):
+    csv_list.append(inner_list)
+    record = Record(
+        name=inner_list[0],
+        team=inner_list[1],
+        pos=inner_list[2],
+        age=inner_list[3],
+        gp=inner_list[4],
+        mpg=inner_list[5],
+        fta=inner_list[6],
+        ftp=inner_list[7],
+        twpa=inner_list[8],
+        twpp=inner_list[9],
+        thpa=inner_list[10],
+        thpp=inner_list[11],
+        ppg=inner_list[12],
+        rpg=inner_list[13],
+        apg=inner_list[14],
+        spg=inner_list[15],
+        bpg=inner_list[16],
+        topg=inner_list[17]
+      )
+    db.session.add(record)
+    db.session.commit()
+  with open(os.path.join(os.path.dirname(__name__), 
+  f'data_{datetime.utcnow().strftime("%Y%d%m%H%M%S")}.csv'), 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerows(csv_list)
   flash("Information saved to CSV", "success")
