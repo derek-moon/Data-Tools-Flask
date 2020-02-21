@@ -10,19 +10,19 @@
       <form class="form-inline float-right" action="{{ url_for('webscrape.setCronjob') }}", method="POST">
         {{ cronjobForm.hidden_tag() }}
         <div class="form-group">
-          {{ cronjobForm.submit(class="btn btn-success") }}
+          {{ cronjobForm.submitCronJob(class="btn btn-success") }}
         </div>
       </form>
       <form class="form-group float-right" action="{{url_for('webscrape.clearSession')}}", method="POST" >
         {{ sessionForm.hidden_tag() }}
         <div class="form-group float-right">
-            {{ sessionForm.submit(class="btn btn-warning") }}
+            {{ sessionForm.submitSession(class="btn btn-warning") }}
         </div>
       </form>
       <form class="form-inline" action="{{ url_for('webscrape.toCSV') }}", method="POST">
         {{ csvForm.hidden_tag() }}
         <div class="form-group">
-          {{ csvForm.submit(class="btn btn-warning") }}
+          {{ csvForm.submitCSV(class="btn btn-warning") }}
         </div>
       </form>
         <h3>Webscrape Page</h3>
@@ -40,7 +40,7 @@
             {{ dataPlayerForm.search(class="form-control", placeholder="Lebron James, Jimmy Butler...")}} 
           </div>
           <div class="form-group">
-            {{ dataPlayerForm.submit(class="btn btn-info") }}
+            {{ dataPlayerForm.submitPlayerData(class="btn btn-info") }}
         </div>
         </form>
       </div>
@@ -57,7 +57,7 @@
           </div>
 
           <div class="form-group">
-            {{ dataTeamForm.submit(class="btn btn-info") }}
+            {{ dataTeamForm.submitTeamData(class="btn btn-info") }}
         </div>
         </form>
       </div>

@@ -3,17 +3,17 @@ from wtforms import StringField, SubmitField
 
 class DataPlayerForm(FlaskForm):
     search = StringField()
-    submit = SubmitField('Scrape Data')
+    submitPlayerData = SubmitField('Scrape Data')
 
 class DataTeamForm(FlaskForm):
     search = StringField()
-    submit = SubmitField('Scrape Data')
+    submitTeamData = SubmitField('Scrape Data')
 
 class SessionForm(FlaskForm):
-    submit = SubmitField('CLEAR SESSION')
+    submitSession = SubmitField('CLEAR SESSION')
 
 class CSVForm(FlaskForm):
-    submit = SubmitField('Save to CSV')
+    submitCSV = SubmitField('Save to CSV')
     
 class CronjobForm(FlaskForm):
-    submit = SubmitField("SET CRONJOB")
+    submitCronJob = SubmitField("SET CRONJOB")
