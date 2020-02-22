@@ -3,7 +3,7 @@ from app import  db
 from flask import current_app, render_template, redirect, url_for, flash, session, jsonify
 from app.models import PlayerRecord
 from flask_login import login_user, logout_user, login_required, current_user
-from app.blueprints.players.forms import SessionForm, PPG_MPGForm, AGE_MPGForm
+from app.blueprints.players.forms import SessionForm, PPG_MPGForm, AGE_MPGForm, THPP_MPGForm
 
 from app.blueprints.players import players
 from app.blueprints.players.getData import cleanPlayerData
@@ -21,10 +21,12 @@ def player():
     sessionForm = SessionForm()
     ppg_mpgForm = PPG_MPGForm()
     age_mpgForm = AGE_MPGForm()
+    thpp_mpgForm = THPP_MPGForm()
     #data = PlayerRecord.query.filter(PlayerRecord.mpg > 20)
     #print(f"Mean: {np.mean(ppg_list)}")
     #plt.hist(ppg_list)
-    context = dict(sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm,age_mpgForm=age_mpgForm)
+    context = dict(sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm,
+    age_mpgForm=age_mpgForm, thpp_mpgForm=thpp_mpgForm)
     return render_template('players.html', **context)
 
 
@@ -33,7 +35,8 @@ def ppg_mpg():
     sessionForm = SessionForm()
     ppg_mpgForm = PPG_MPGForm()
     age_mpgForm = AGE_MPGForm()
-
+    thpp_mpgForm = THPP_MPGForm()
+    
     data = PlayerRecord.query.all()
     ppg_list = []
     mpg_list = []
@@ -48,9 +51,10 @@ def ppg_mpg():
     axis.set_xlabel("Points Per Game")
     axis.set_ylabel("Minutes Per Game")
     axis.grid()
-    axis.plot(mpg_list, ppg_list, "ro")
+    axis.plot(ppg_list,mpg_list, "ro")
 
-    context = dict(graph=graphHelper(fig),sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm, age_mpgForm=age_mpgForm)
+    context = dict(graph=graphHelper(fig),sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm,
+    age_mpgForm=age_mpgForm, thpp_mpgForm=thpp_mpgForm)
     flash("Graph added","info")
     return render_template('ppg-mpg.html', **context)
 
@@ -60,6 +64,7 @@ def age_mpg():
     sessionForm = SessionForm()
     ppg_mpgForm = PPG_MPGForm()
     age_mpgForm = AGE_MPGForm()
+    thpp_mpgForm = THPP_MPGForm()
 
     data = PlayerRecord.query.all()
     age_list = []
@@ -75,11 +80,43 @@ def age_mpg():
     axis.set_xlabel("Player Age")
     axis.set_ylabel("Minutes Per Game")
     axis.grid()
-    axis.plot(mpg_list, age_list, "ro")
+    axis.plot(age_list,mpg_list, "ro")
 
-    context = dict(graph=graphHelper(fig),sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm,age_mpgForm=age_mpgForm)
+    context = dict(graph=graphHelper(fig),sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm,
+    age_mpgForm=age_mpgForm, thpp_mpgForm=thpp_mpgForm)
     flash("Graph added","info")
     return render_template('age-mpg.html', **context)
+
+@players.route('/thpp_mpg', methods=['POST'])
+def thpp_mpg():
+    sessionForm = SessionForm()
+    ppg_mpgForm = PPG_MPGForm()
+    age_mpgForm = AGE_MPGForm()
+    thpp_mpgForm = THPP_MPGForm()
+
+    data = PlayerRecord.query.filter(PlayerRecord.mpg>20)
+    
+    #PlayerRecord.query.filter(PlayerRecord.gp>20)
+    thpp_list = []
+    mpg_list = []
+
+    for row in data:
+        thpp_list.append(row.age)
+        mpg_list.append(row.mpg)
+
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    axis.set_title("3P% vs MPG")
+    axis.set_xlabel("Three Point Percentage")
+    axis.set_ylabel("Minutes Per Game")
+    axis.grid()
+    axis.plot(thpp_list,mpg_list, "ro")
+
+    context = dict(graph=graphHelper(fig),sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm,
+    age_mpgForm=age_mpgForm, thpp_mpgForm=thpp_mpgForm)
+    flash("Graph added","info")
+    return render_template('thpp-mpg.html', **context)
+
 
 @players.route('/clearSession', methods=['POST'])
 def clearSession():
@@ -123,7 +160,9 @@ def upload():
         db.session.add(record)
         db.session.commit()
 
-    context = dict(data=data)
+    context = {
+
+    }
     return render_template('players.html', **context)
 
 def dataHelper():

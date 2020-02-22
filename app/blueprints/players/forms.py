@@ -10,3 +10,6 @@ class PPG_MPGForm(FlaskForm):
 
 class AGE_MPGForm(FlaskForm):
     submit_age_mpgForm = SubmitField('AGE/MPG')
+
+class THPP_MPGForm(FlaskForm):
+    submit_ttpp_mpgForm = SubmitField('3P%/MPG')

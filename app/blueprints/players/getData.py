@@ -1,4 +1,4 @@
-
+#uploads all player to db
 def getPlayerData(data):
     data_list = []
     for tr in data:

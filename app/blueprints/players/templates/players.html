@@ -27,6 +27,13 @@
             </div>
           </form>
 
+          <form class="form-group float-right" action="{{ url_for('players.thpp_mpg') }}", method="POST">
+            {{ thpp_mpgForm.hidden_tag() }}
+            <div class="form-group">
+              {{thpp_mpgForm.submit_ttpp_mpgForm(class="btn btn-warning") }}
+            </div>
+          </form>
+
         
           <h3>Player Stats Page</h3>
       </div>

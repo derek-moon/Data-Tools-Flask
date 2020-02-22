@@ -6,6 +6,7 @@ from flask_login import UserMixin
 class User(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
+    test = db.Column(db.String(40), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(180), nullable=False)
     created_on = db.Column(db.DateTime, nullable=False,
@@ -28,7 +29,7 @@ class Record(db.Model):
     team = db.Column(db.String, nullable=False)
     pos = db.Column(db.String, nullable=False)
     age = db.Column(db.Float, nullable=False)
-    gp = db.Column(db.String, nullable=False)
+    gp = db.Column(db.Integer, nullable=False)
     mpg = db.Column(db.Float, nullable=False)
     fta = db.Column(db.String, nullable=False)
     ftp = db.Column(db.Float, nullable=False)
@@ -74,7 +75,7 @@ class PlayerRecord(db.Model):
     team = db.Column(db.String, nullable=False)
     pos = db.Column(db.String, nullable=False)
     age = db.Column(db.Float, nullable=False)
-    gp = db.Column(db.String, nullable=False)
+    gp = db.Column(db.Integer, nullable=False)
     mpg = db.Column(db.Float, nullable=False)
     fta = db.Column(db.String, nullable=False)
     ftp = db.Column(db.Float, nullable=False)
