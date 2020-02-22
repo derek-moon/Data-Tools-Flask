@@ -6,6 +6,13 @@
     <div class="col-lg">
       <div>
         
+        <form class="form-group float-right" action="{{url_for('players.clearSession')}}", method="POST" >
+            {{ sessionForm.hidden_tag() }}
+            <div class="form-group float-right">
+                {{ sessionForm.submitSession(class="btn btn-danger") }}
+            </div>
+          </form>
+
         <form class="form-group float-right" action="{{ url_for('players.ppg_mpg') }}", method="POST">
             {{ ppg_mpgForm.hidden_tag() }}
             <div class="form-group">
@@ -13,10 +20,10 @@
             </div>
           </form>
 
-        <form class="form-group float-right" action="{{url_for('players.clearSession')}}", method="POST" >
-            {{ sessionForm.hidden_tag() }}
-            <div class="form-group float-right">
-                {{ sessionForm.submitSession(class="btn btn-danger") }}
+          <form class="form-group float-right" action="{{ url_for('players.age_mpg') }}", method="POST">
+            {{ ppg_mpgForm.hidden_tag() }}
+            <div class="form-group">
+              {{age_mpgForm.submit_age_mpgForm(class="btn btn-warning") }}
             </div>
           </form>
           <h3>Player Stats Page</h3>

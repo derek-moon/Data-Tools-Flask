@@ -7,3 +7,6 @@ class SessionForm(FlaskForm):
 
 class PPG_MPGForm(FlaskForm):
     submit_ppg_mpgForm = SubmitField('PPG/MPG')
+
+class AGE_MPGForm(FlaskForm):
+    submit_age_mpgForm = SubmitField('AGE/MPG')

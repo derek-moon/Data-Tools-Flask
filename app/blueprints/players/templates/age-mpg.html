@@ -5,8 +5,8 @@
   <div class="row">
     <div class="col-lg">
       <div>
-
-          <form class="form-group float-right" action="{{url_for('players.clearSession')}}", method="POST" >
+        
+        <form class="form-group float-right" action="{{url_for('players.clearSession')}}", method="POST" >
             {{ sessionForm.hidden_tag() }}
             <div class="form-group float-right">
                 {{ sessionForm.submitSession(class="btn btn-danger") }}
@@ -27,7 +27,6 @@
             </div>
           </form>
 
-        
           <h3>Player Stats Page</h3>
       </div>
       <hr/>
