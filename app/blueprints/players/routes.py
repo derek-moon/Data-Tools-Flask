@@ -3,6 +3,7 @@ from app import  db
 from flask import current_app, render_template, redirect, url_for, flash, session, jsonify
 from app.models import PlayerRecord
 from flask_login import login_user, logout_user, login_required, current_user
+from app.blueprints.players.forms import SessionForm
 
 from app.blueprints.players import players
 from app.blueprints.players.getData import cleanPlayerData
@@ -17,23 +18,25 @@ from matplotlib.figure import Figure
 
 @players.route('/')
 def player():
-    data = PlayerRecord.query.filter(PlayerRecord.mpg > 20)
+    sessionForm = SessionForm()
+    #data = PlayerRecord.query.filter(PlayerRecord.mpg > 20)
+    #print(f"Mean: {np.mean(ppg_list)}")
+    #plt.hist(ppg_list)
+    data = PlayerRecord.query.all()
     ppg_list = []
+    mpg_list = []
+
     for row in data:
         ppg_list.append(row.ppg)
-
-    print(f"Mean: {np.mean(ppg_list)}")
-    plt.hist(ppg_list)
-    #print(float(data[5].ppg))
-
+        mpg_list.append(row.mpg)
 
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
-    axis.set_title("title")
-    axis.set_xlabel("x-axis")
-    axis.set_ylabel("y-axis")
+    axis.set_title("PPG vs MPG")
+    axis.set_xlabel("Points Per Game")
+    axis.set_ylabel("Minutes Per Game")
     axis.grid()
-    axis.plot(range(5), range(5), "ro-")
+    axis.plot(mpg_list, ppg_list, "ro")
 
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)
@@ -41,20 +44,18 @@ def player():
     pngImageB64String = "data:image/png;base64,"
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
     image = pngImageB64String
-    context = {
-        'graph':image
-    }
+    context = dict(graph=image,sessionForm=sessionForm)
+       
     pass
     return render_template('players.html', **context)
 
+@players.route('/clearSession', methods=['POST'])
+def clearSession():
+    session.clear()
+    flash("Session has been cleared","info")
+    return redirect(url_for('players.player'))
 
-def create_figure():
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    xs = range(100)
-    ys = [random.randint(1, 50) for x in xs]
-    axis.plot(xs, ys)
-    return fig
+
 
 
 
