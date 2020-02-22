@@ -3,7 +3,7 @@ from app import  db
 from flask import current_app, render_template, redirect, url_for, flash, session, jsonify
 from app.models import PlayerRecord
 from flask_login import login_user, logout_user, login_required, current_user
-from app.blueprints.players.forms import SessionForm
+from app.blueprints.players.forms import SessionForm, PPG_MPGForm
 
 from app.blueprints.players import players
 from app.blueprints.players.getData import cleanPlayerData
@@ -19,9 +19,22 @@ from matplotlib.figure import Figure
 @players.route('/')
 def player():
     sessionForm = SessionForm()
+    ppg_mpgForm = PPG_MPGForm()
     #data = PlayerRecord.query.filter(PlayerRecord.mpg > 20)
     #print(f"Mean: {np.mean(ppg_list)}")
     #plt.hist(ppg_list)
+    
+    
+    context = dict(sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm)
+
+    return render_template('players.html', **context)
+
+
+@players.route('/ppg_mpg', methods=['POST'])
+def ppg_mpg():
+    sessionForm = SessionForm()
+    ppg_mpgForm = PPG_MPGForm()
+
     data = PlayerRecord.query.all()
     ppg_list = []
     mpg_list = []
@@ -38,27 +51,19 @@ def player():
     axis.grid()
     axis.plot(mpg_list, ppg_list, "ro")
 
-    pngImage = io.BytesIO()
-    FigureCanvas(fig).print_png(pngImage)
+    
 
-    pngImageB64String = "data:image/png;base64,"
-    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
-    image = pngImageB64String
-    context = dict(graph=image,sessionForm=sessionForm)
-       
-    pass
-    return render_template('players.html', **context)
+    context = dict(graph=graphHelper(fig),sessionForm=sessionForm, ppg_mpgForm=ppg_mpgForm)
+    flash("Graph added","info")
+
+    return render_template('ppg-mpg.html', **context)
+
 
 @players.route('/clearSession', methods=['POST'])
 def clearSession():
     session.clear()
     flash("Session has been cleared","info")
     return redirect(url_for('players.player'))
-
-
-
-
-
 
 #uploads updated player data to server
 @players.route('/upload')
@@ -105,3 +110,13 @@ def dataHelper():
     html = [i for i in list(soup.children)][3] 
     tr_list = html.find_all('tr')[1:]
     return tr_list
+
+def graphHelper(fig):
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+
+    pngImageB64String = "data:image/png;base64,"
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+
+    graph = pngImageB64String
+    return graph
